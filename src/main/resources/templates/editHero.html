@@ -38,6 +38,15 @@
                     <input type="text" th:field="*{cellphone}" class="form-control" id="cellphone" required>
                     <span th:if="${#fields.hasErrors('cellphone')}" th:errors="*{cellphone}"></span>
                 </div>
+                <div class="mb-3">
+                    <label for="numberIncidents" class="form-label">Maximum number of incidents :</label>
+                    <select type="text" th:field="*{numberIncidents}" class="form-control" id="numberIncidents" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('numberIncidents')}" th:errors="*{numberIncidents}"></span>
+                </div>
                 <div class="text-end">
                     <button class="btn btn-success">Add Hero</button>
                 </div>

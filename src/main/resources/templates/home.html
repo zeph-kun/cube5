@@ -26,25 +26,31 @@
     </nav>
 
     <main class="container">
-        <div class="row">
-            <div class="col-10 offset-1 p-3 rounded bg-dark text-white">
-                <h1>Need a hero ?</h1>
-                <hr>
-                <form method="post">
-                    <div class="mb-3">
-                        <label>Incidents
-                            <select name="selectedIncidentId">
-                                <option th:each="incident : ${existingIncidents}" th:value="${incident.id}" th:text="${incident.name}"></option>
-                            </select>
-                        </label>
+        <div class="row col-10 offset-1 p-3">
+            <h1>Need a hero ?</h1>
+            <hr>
+            <div class="rounded bg-dark text-white mb-3">
+                <form method="post" action="/addIncident" class="mb-3 mt-3">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Incidents</span>
+                        <select class="form-select" name="type">
+                            <option th:each="incident : ${existingIncidents}" th:value="${incident.city}" th:text="${incident.name}"></option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Latitude / Longitude / City</span>
+                        <input type="text" class="form-control" name="latitude" placeholder="Latitude">
+                        <input type="text" class="form-control" name="longitude" placeholder="Longitude">
+                        <input type="text" class="form-control" name="city" placeholder="City">
                     </div>
                     <div class="text-end">
-                        <button class="btn btn-success">Add Incident</button>
+                        <button class="btn btn-success">Search</button>
                     </div>
                 </form>
             </div>
         </div>
     </main>
+
     <div id="map" style="height: 100%;"></div>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe2kCiOVigTKRsTOeQmqH-QYMQGTIsRJs&callback=initMap&v=weekly"

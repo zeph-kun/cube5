@@ -3,6 +3,7 @@ package com.example.cube5.domain;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,7 +19,16 @@ public class SuperHero {
     private Float latitude;
     private Float longitude;
     private String cellphone;
+
     private Integer numberIncidents;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "superhero_incidents",
+            joinColumns = @JoinColumn(name = "superhero_id"),
+            inverseJoinColumns = @JoinColumn(name = "incident_id")
+    )
+    private Set<Incident> Incidents = new HashSet<>();
 
     public Integer getNumberIncidents() {
         return numberIncidents;
@@ -112,5 +122,45 @@ public class SuperHero {
                 ", longitude=" + longitude +
                 ", cellphone='" + cellphone + '\'' +
                 '}';
+    }
+
+    public boolean canHandleIncident(Incident incident) {
+        double earthRadius = 6371.0; // rayon de la Terre en km
+
+        double lat1 = Math.toRadians(this.getLatitude());
+        double lon1 = Math.toRadians(this.getLongitude());
+        double lat2 = Math.toRadians(incident.getLatitude());
+        double lon2 = Math.toRadians(incident.getLongitude());
+
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+
+        double a = Math.pow(Math.sin(dlat / 2), 2)
+                + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2),2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        double distance = earthRadius * c;
+
+        if (distance <= 50 && this.numberIncidents > 0) {
+            System.out.println("SuperHero can handle incident in city: " + incident.getCity());
+            return true;
+        } else {
+            System.out.println("SuperHero cannot handle incident in city: " + incident.getCity());
+            return false;
+        }
+    }
+
+    public boolean isInRadius(double incidentLatitude, double incidentLongitude) {
+        final int EARTH_RADIUS_KM = 6371;
+        double latDistance = Math.toRadians(this.latitude - incidentLatitude);
+        double lonDistance = Math.toRadians(this.longitude - incidentLongitude);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(this.latitude)) * Math.cos(Math.toRadians(incidentLatitude))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = EARTH_RADIUS_KM * c;
+        System.out.println("Is in radius: " + distance);
+        return distance <= 50;
     }
 }
