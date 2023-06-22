@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script type="module" th:src="@{../static/index.js}"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default" integrity="sha384-WSLBwI+Q8tqRHaC+f1sjS/FVv5cWp7VAfrGB17HLfZlXhbp5F/RPVP7bYVHtiAWE" crossorigin="anonymous"></script>
+<!--    <script type="module" th:src="@{../static/index.js}"></script>-->
     <script th:src="@{/webjars/bootstap/5.2.3/js/bootstrap.min.js}"></script>
     <title>Heroes List</title>
 </head>
@@ -29,7 +29,7 @@
         <div class="row col-10 offset-1 p-3">
             <h1>Need a hero ?</h1>
             <hr>
-            <div class="rounded bg-dark text-white mb-3">
+            <div class="rounded bg-light text-white mb-3">
                 <form method="post" action="/addIncident" class="mb-3 mt-3">
                     <div class="input-group mb-3">
                         <span class="input-group-text">Incidents</span>
@@ -49,12 +49,40 @@
                 </form>
             </div>
         </div>
+        <div id="map" class="visible position-fixed overflow-visible"></div>
     </main>
 
-    <div id="map" style="height: 100%;"></div>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe2kCiOVigTKRsTOeQmqH-QYMQGTIsRJs&callback=initMap&v=weekly"
-        defer>
+    <script>
+        let map;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 0, lng: 0 },
+                zoom: 8
+            });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+
+                    map.setCenter({ lat: latitude, lng: longitude });
+
+                    var marker = new google.maps.Marker({
+                        position: { lat: latitude, lng: longitude },
+                        map: map
+                    });
+                }, function() {
+                    console.error('Erreur : Impossible de récupérer les coordonnées de géolocalisation');
+                });
+            } else {
+                console.error('Erreur : La géolocalisation n\'est pas prise en charge par ce navigateur');
+            }
+        }
+        initMap()
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe2kCiOVigTKRsTOeQmqH-QYMQGTIsRJs&callback=initMap"
+            defer>
     </script>
 </body>
 </html>

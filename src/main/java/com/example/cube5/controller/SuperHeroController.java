@@ -27,11 +27,11 @@ public class SuperHeroController {
         return "heroList";
     }
 
-    @GetMapping("/create")
-    public String createHeroForm(Model model) {
-        model.addAttribute("hero", new SuperHero());
-        return "createHero";
-    }
+//    @GetMapping("/create")
+//    public String createHeroForm(Model model) {
+//        model.addAttribute("hero", new SuperHero());
+//        return "createHero";
+//    }
 
     @PostMapping("/create")
     public String createHero(@Validated SuperHero superHero, BindingResult result) {
